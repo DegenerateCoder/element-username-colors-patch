@@ -140,9 +140,9 @@ fn patch_asar(path: &str, usernames_colors: [&str; 6]) -> Result<()> {
 
 fn replace_username_color(file_content: &str, user_number: usize, color: &str) -> String {
     let user_number = user_number + 1;
-    let to_find_start = &format!(".mx_Username_color{user_number}{{color:var(");
+    let to_find_start = &format!("--cpd-color-text-decorative-{user_number}:var(");
     let start_index = file_content.find(to_find_start).unwrap();
-    let to_find_end = ")}";
+    let to_find_end = ");";
     let end_index =
         start_index + file_content[start_index..].find(to_find_end).unwrap() + to_find_end.len();
     let text = file_content.get(start_index..end_index).unwrap();

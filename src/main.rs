@@ -12,13 +12,11 @@ enum PatchType {
 fn main() -> Result<()> {
     let usernames_colors = [
         "--cpd-color-blue-900",
-        "--cpd-color-fuchsia-900",
         "--cpd-color-green-900",
         "--cpd-color-pink-900",
-        "--cpd-color-orange-900",
-        "--cpd-color-cyan-900",
         "--cpd-color-purple-900",
-        "--cpd-color-lime-900",
+        "--cpd-color-cyan-900",
+        "--cpd-color-orange-900",
     ];
 
     let path = &env::args().skip(1).next().or(Some("".to_string())).unwrap();
@@ -94,7 +92,7 @@ fn main() -> Result<()> {
     println!("\tarch: /usr/share/webapps/element/");
     Ok(())
 }
-fn patch_theme_file(path: &str, usernames_colors: [&str; 8]) -> Result<()> {
+fn patch_theme_file(path: &str, usernames_colors: [&str; 6]) -> Result<()> {
     // backup
     fs::copy(path, path.replace(".css", "_backup.css"))?;
 
@@ -110,7 +108,7 @@ fn patch_theme_file(path: &str, usernames_colors: [&str; 8]) -> Result<()> {
     Ok(())
 }
 
-fn patch_asar(path: &str, usernames_colors: [&str; 8]) -> Result<()> {
+fn patch_asar(path: &str, usernames_colors: [&str; 6]) -> Result<()> {
     // backup
     fs::copy(path, path.replace(".asar", "_backup.asar"))?;
 

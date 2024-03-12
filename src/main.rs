@@ -70,9 +70,10 @@ fn main() -> Result<()> {
         match patch_type {
             PatchType::None => (),
             PatchType::Bundles(path) => {
-                let path = path.read_dir().unwrap().next().unwrap().unwrap();
-                let mut path = path.path();
-                path.push("theme-dark.css");
+                let path = path.read_dir().unwrap();
+                let mut bundle_folder = find_newest_bundle_folder(path);
+                bundle_folder.push("theme-dark.css");
+                let path = bundle_folder;
                 println!("Patching: {:?}", path.to_str().unwrap());
                 patch_theme_file(&path.to_str().unwrap(), usernames_colors)?;
                 return Ok(());
@@ -150,4 +151,23 @@ fn replace_username_color(file_content: &str, user_number: usize, color: &str) -
     let file_content = file_content.replace(text, &format!("{to_find_start}{color}{to_find_end}"));
 
     file_content
+}
+
+fn find_newest_bundle_folder(bundles_dir: std::fs::ReadDir) -> std::path::PathBuf {
+    let mut bundles_dir = bundles_dir
+        .filter_map(|entry| entry.ok())
+        .filter(|file| {
+            file.file_type()
+                .map_or(false, |file_type| file_type.is_dir())
+        })
+        .map(|dir| {
+            (
+                dir.path(),
+                dir.path()
+                    .read_dir()
+                    .map_or(0, |dir_reader| dir_reader.count()),
+            )
+        });
+
+    bundles_dir.find(|(_, count)| *count > 5).unwrap().0
 }

@@ -35,7 +35,13 @@ fn main() -> Result<()> {
                 } else if file.ends_with("bundles") {
                     patch_type = PatchType::Bundles(file);
                     break;
-                } else if file.to_str().unwrap().starts_with("app-") {
+                } else if file
+                    .strip_prefix(path)
+                    .unwrap()
+                    .to_str()
+                    .unwrap()
+                    .starts_with("app-")
+                {
                     let file_path = file
                         .strip_prefix(path)
                         .unwrap()
